@@ -1015,6 +1015,8 @@ tapdisk_control_stats(struct tapdisk_ctl_conn *conn,
 	void *buf;
 	int new_size;
 
+	memset(st, 0, sizeof(td_stats_t));
+
     ASSERT(conn);
     ASSERT(request);
     ASSERT(response);
@@ -1068,7 +1070,8 @@ tapdisk_control_stats(struct tapdisk_ctl_conn *conn,
 		memcpy(conn->out.buf + sizeof(*response), st->buf, rv);
 	}
 out:
-	free(st->buf);
+	if(st->buf)
+		free(st->buf);
     if (rv > 0) {
         response->type = TAPDISK_MESSAGE_STATS_RSP;
         response->u.info.length = rv;
